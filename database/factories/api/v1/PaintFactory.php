@@ -17,6 +17,7 @@ class PaintFactory extends Factory
             'name' => $this->faker->name(),
             'painter_id' => rand(1,9),
             'country_id' => rand(1,2),
+            'user_id' => 1,
         ];
     }
 }
