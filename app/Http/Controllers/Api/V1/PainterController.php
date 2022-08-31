@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\{StorePainterRequest, UpdatePainterRequest};
 use App\Models\Api\V1\Painter;
 use App\Http\Resources\Api\V1\PainterResource;
+use Cache;
 
 class PainterController extends Controller
 {
@@ -15,6 +15,14 @@ class PainterController extends Controller
      *      tags={"Painters"},
      *      summary="Get list of painters",
      *      description="Returns list of painters",
+     *      @OA\Parameter(
+     *       name="token",
+     *       required=true,
+     *       in="query",
+     *       @OA\Schema(
+     *           type="string",
+     *       )
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -32,6 +40,10 @@ class PainterController extends Controller
      */
     public function index()
     {
-        return PainterResource::collection(Painter::paginate());
+        $painters = Cache::remember('painters', 3600, function () {
+            return PainterResource::collection(Painter::paginate());
+        });
+
+        return $painters;
     }
 }

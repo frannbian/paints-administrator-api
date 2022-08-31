@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\StoreCountryRequest;
-use App\Http\Requests\UpdateCountryRequest;
 use App\Models\Api\V1\Country;
+use App\Http\Resources\Api\V1\CountryResource;
+use Cache;
 
 class CountryController extends Controller
 {
@@ -15,6 +15,14 @@ class CountryController extends Controller
      *      tags={"Countries"},
      *      summary="Get list of countries",
      *      description="Returns list of countries",
+     *      @OA\Parameter(
+     *       name="token",
+     *       required=true,
+     *       in="query",
+     *       @OA\Schema(
+     *           type="string",
+     *       )
+     *      ),
      *      @OA\Response(
      *          response=200,
      *          description="Successful operation",
@@ -32,6 +40,10 @@ class CountryController extends Controller
      */
     public function index()
     {
-        return CountryResource::collection(Country::paginate());
+        $countries = Cache::remember('countries', 3600, function () {
+            return CountryResource::collection(Country::paginate());
+        });
+
+        return $countries;
     }
 }
