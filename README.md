@@ -39,6 +39,10 @@ After we get the token we'll be able to user all the others endpoint, always set
 
 Example for filters & fields in GET Paint Endpoint:
 http://localhost:8070/api/v1/paints?filters[country]=URU&fields[1]=id&fields[2]=name&fields[3]=painter
+
+## Request & Responses 
+For logs of the request & responses we gonna use "Laravel Telescope" a powerfull package for this feature.
+¿How to use? Easy. Just go to http://localhost:8070/telescope;
 ## Plugins
 
 This project is currently extended with the following plugins.
