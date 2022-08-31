@@ -5,17 +5,12 @@
 
 Paints microservice
 
-- Easily to start
-- See HTML in the right
-- ✨Magic ✨
-
 ## Features
 
 - OAuth Security
 - Docker
 - Paints CRUD
 - Cached responses
-- Responses dashboard
 
 ## Installation
 
@@ -30,6 +25,7 @@ cp .env.example .env
 docker-compose up -d
 docker-compose exec app /bin/bash (for Windows use docker-compose exec app //bin//bash)
 composer install
+php artisan telescope:install
 php artisan migrate --seed
 php artisan passport:install
 php artisan passport:client --client (save the credentials, we gonna user later)
