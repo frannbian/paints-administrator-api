@@ -1,0 +1,770 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Extendeal Challange - API",
+        "description": "Extendeal Challange - API",
+        "contact": {
+            "email": "franco.bianco93@gmail.com"
+        },
+        "license": {
+            "name": "2022 Horneroprop Argentina",
+            "url": "https://horneroprop.com"
+        },
+        "version": "v1.0.0"
+    },
+    "paths": {
+        "/api/v1": {},
+        "/api/v1/oauth/token": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Get authorization Token",
+                "description": "Returns a Bearer token",
+                "operationId": "getToken",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "client_id": {
+                                        "type": "string"
+                                    },
+                                    "client_secret": {
+                                        "type": "string"
+                                    },
+                                    "grant_type": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object",
+                                "example": {
+                                    "client_id": "3",
+                                    "client_secret": "wae3tco18YmxsW25nLuTNlNSjG2pixqD6yJ9V6rh",
+                                    "grant_type": "client_credentials"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Authenticated"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/v1/countries": {
+            "get": {
+                "tags": [
+                    "Countries"
+                ],
+                "summary": "Get list of countries",
+                "description": "Returns list of countries",
+                "operationId": "getCountriesList",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CountryResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/v1/paints": {
+            "get": {
+                "tags": [
+                    "Paints"
+                ],
+                "summary": "Get list of paints",
+                "description": "Returns list of paints",
+                "operationId": "getPaintsList",
+                "parameters": [
+                    {
+                        "name": "X-HTTP-USER-ID",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filters",
+                        "in": "query",
+                        "description": "Filters",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/components/schemas/GetPaintsFiltersRequest"
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "description": "Fields",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/components/schemas/GetPaintsFieldsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Paints"
+                ],
+                "summary": "Store new paint",
+                "description": "Returns paint data",
+                "operationId": "storePaint",
+                "parameters": [
+                    {
+                        "name": "X-HTTP-USER-ID",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePaintRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Paint"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/api/v1/paints/{id}": {
+            "get": {
+                "tags": [
+                    "Paints"
+                ],
+                "summary": "Get paint information",
+                "description": "Returns paint data",
+                "operationId": "getPaintById",
+                "parameters": [
+                    {
+                        "name": "X-HTTP-USER-ID",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Paint id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Paint"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Paints"
+                ],
+                "summary": "Update existing paint",
+                "description": "Returns updated paint data",
+                "operationId": "updatePaint",
+                "parameters": [
+                    {
+                        "name": "X-HTTP-USER-ID",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Paint id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StorePaintRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Paint"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Paints"
+                ],
+                "summary": "Delete existing paint",
+                "description": "Deletes a record and returns no content",
+                "operationId": "deletePaint",
+                "parameters": [
+                    {
+                        "name": "X-HTTP-USER-ID",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Paint id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                }
+            }
+        },
+        "/api/v1/painters": {
+            "get": {
+                "tags": [
+                    "Painters"
+                ],
+                "summary": "Get list of painters",
+                "description": "Returns list of painters",
+                "operationId": "getPaintersList",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PainterResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "GetPaintsFieldsRequest": {
+                "title": "Get Paint Fields request",
+                "description": "Get Paint Fields request param data",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "fields": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "1": {
+                                    "description": "Field ID",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "2": {
+                                    "description": "Field Name",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "3": {
+                                    "description": "Field Painter",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "GetPaintsFiltersRequest": {
+                "title": "Get Paint Filters request",
+                "description": "Get Paint Filters request param data",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "filters": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "country": {
+                                    "description": "Filter Country",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "GetPaintsRequest": {
+                "title": "Get Paint request",
+                "description": "Get Paint request param data",
+                "required": [
+                    "name"
+                ],
+                "type": "object"
+            },
+            "StorePaintRequest": {
+                "title": "Store Paint request",
+                "description": "Store Paint request body data",
+                "required": [
+                    "name",
+                    "painter_id"
+                ],
+                "properties": {
+                    "name": {
+                        "title": "name",
+                        "description": "Name of the new paint",
+                        "type": "string",
+                        "example": "A nice paint"
+                    },
+                    "country_id": {
+                        "title": "country_id",
+                        "description": "Country ID of the paint",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "painter_id": {
+                        "title": "painter_id",
+                        "description": "Painter ID of the paint",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdatePaintRequest": {
+                "title": "Update Paint request",
+                "description": "Update Paint request body data",
+                "required": [
+                    "name",
+                    "painter_id"
+                ],
+                "properties": {
+                    "name": {
+                        "title": "name",
+                        "description": "Name of the new paint",
+                        "type": "string",
+                        "example": "A nice paint"
+                    },
+                    "country_id": {
+                        "title": "country_id",
+                        "description": "Country ID of the paint",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "painter_id": {
+                        "title": "painter_id",
+                        "description": "Painter ID of the paint",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "CountryResource": {
+                "title": "CountryResource",
+                "description": "Country resource",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "Data wrapper",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Country"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "CountryResource"
+                }
+            },
+            "PaintResource": {
+                "title": "PaintResource",
+                "description": "Painter resource",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "Data wrapper",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Paint"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "PaintResource"
+                }
+            },
+            "PainterResource": {
+                "title": "PainterResource",
+                "description": "Painter resource",
+                "properties": {
+                    "data": {
+                        "title": "Data",
+                        "description": "Data wrapper",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Painter"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "PainterResource"
+                }
+            },
+            "Country": {
+                "title": "Country",
+                "description": "Country model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of the new country",
+                        "type": "string",
+                        "example": "Argentina"
+                    },
+                    "code": {
+                        "title": "Code",
+                        "description": "Code of the new country",
+                        "type": "string",
+                        "example": "ARG"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Country"
+                }
+            },
+            "Paint": {
+                "title": "Paint",
+                "description": "Paint model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of the new paint",
+                        "type": "string",
+                        "example": "A nice paint"
+                    },
+                    "painter_id": {
+                        "title": "Painter ID",
+                        "description": "Painter's id of the new Paint",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "painter": {
+                        "title": "Painter",
+                        "description": "Paint painter model"
+                    },
+                    "country_id": {
+                        "title": "Country ID",
+                        "description": "Country's id of the new Paint",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "country": {
+                        "title": "Country",
+                        "description": "Paint country model"
+                    },
+                    "user_id": {
+                        "title": "User ID",
+                        "description": "User's id of the new Paint",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "user": {
+                        "title": "User",
+                        "description": "Paint user model"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Paint"
+                }
+            },
+            "Painter": {
+                "title": "Painter",
+                "description": "Painter model",
+                "properties": {
+                    "id": {
+                        "title": "ID",
+                        "description": "ID",
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "name": {
+                        "title": "Name",
+                        "description": "Name of the new country",
+                        "type": "string",
+                        "example": "Piccaso"
+                    },
+                    "created_at": {
+                        "title": "Created at",
+                        "description": "Created at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    },
+                    "updated_at": {
+                        "title": "Updated at",
+                        "description": "Updated at",
+                        "type": "string",
+                        "format": "datetime",
+                        "example": "2020-01-27 17:50:45"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "Painter"
+                }
+            }
+        }
+    }
+}
