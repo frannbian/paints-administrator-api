@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Api\V1\Paint;
-use App\Http\Requests\Api\V1\{StorePaintRequest, UpdatePaintRequest};
-use App\Http\Resources\Api\V1\PaintResource;
+use App\Http\Requests\Api\V1\{StorePaintRequest, UpdatePaintRequest, GetPaintsRequest}
+;use App\Http\Resources\Api\V1\PaintResource;
 use App\Repositories\V1\PaintRepository;
 use Illuminate\Http\Request;
 use Cache;
@@ -26,15 +26,32 @@ class PaintController extends Controller
      *           type="integer"
      *       )
      *      ),
-      *   @OA\Parameter(
-    *     name="filters",
-    *     in="query",
-    *     description="Filters",
-    *     required=false,
-    *     @OA\Schema(
-    *          ref="#/components/schemas/GetPaintsRequest"
-    *       ),
-    *       ),
+     *      @OA\Parameter(
+     *       name="token",
+     *       required=true,
+     *       in="query",
+     *       @OA\Schema(
+     *           type="string",
+     *       )
+     *      ),
+     *      @OA\Parameter(
+     *          name="filters",
+     *          in="query",
+     *          description="Filters",
+     *          required=false,
+     *          @OA\Schema(
+     *              ref="#/components/schemas/GetPaintsFiltersRequest"
+     *          ),
+     *       ),
+     *      @OA\Parameter(
+     *          name="fields",
+     *          in="query",
+     *          description="Fields",
+     *          required=false,
+     *          @OA\Schema(
+     *              ref="#/components/schemas/GetPaintsFieldsRequest"
+     *          ),
+     *       ),
      *      @OA\Response(
      *          response=401,
      *          description="Unauthenticated",
@@ -45,11 +62,11 @@ class PaintController extends Controller
      *      )
      *     )
      */
-    public function index(Request $request)
+    public function index(GetPaintsRequest $request)
     {
-        $cacheKey = md5(json_encode($request->query()));
-        $paints = Cache::tags(['paints'])->remember($cacheKey, 3600, function () {
-            return PaintRepository::get();
+        $cacheKey = md5(json_encode($request->validated()));
+        $paints = Cache::tags(['paints'])->remember($cacheKey, 3600, function () use ($request) {
+            return PaintRepository::get($request);
         });
 
         return $paints;
@@ -68,6 +85,14 @@ class PaintController extends Controller
      *       in="header",
      *       @OA\Schema(
      *           type="integer"
+     *       )
+     *      ),
+     *      @OA\Parameter(
+     *       name="token",
+     *       required=true,
+     *       in="query",
+     *       @OA\Schema(
+     *           type="string",
      *       )
      *      ),
      *      @OA\RequestBody(
@@ -118,6 +143,14 @@ class PaintController extends Controller
      *       )
      *      ),
      *      @OA\Parameter(
+     *       name="token",
+     *       required=true,
+     *       in="query",
+     *       @OA\Schema(
+     *           type="string",
+     *       )
+     *      ),
+     *      @OA\Parameter(
      *          name="id",
      *          description="Paint id",
      *          required=true,
@@ -163,6 +196,14 @@ class PaintController extends Controller
      *       in="header",
      *       @OA\Schema(
      *           type="integer"
+     *       )
+     *      ),
+     *      @OA\Parameter(
+     *       name="token",
+     *       required=true,
+     *       in="query",
+     *       @OA\Schema(
+     *           type="string",
      *       )
      *      ),
      *      @OA\Parameter(
@@ -224,6 +265,14 @@ class PaintController extends Controller
      *       in="header",
      *       @OA\Schema(
      *           type="integer"
+     *       )
+     *      ),
+     *      @OA\Parameter(
+     *       name="token",
+     *       required=true,
+     *       in="query",
+     *       @OA\Schema(
+     *           type="string",
      *       )
      *      ),
      *      @OA\Parameter(

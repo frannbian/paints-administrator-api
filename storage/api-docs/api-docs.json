@@ -116,12 +116,29 @@
                         }
                     },
                     {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "filters",
                         "in": "query",
                         "description": "Filters",
                         "required": false,
                         "schema": {
-                            "$ref": "#/components/schemas/GetPaintsRequest"
+                            "$ref": "#/components/schemas/GetPaintsFiltersRequest"
+                        }
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "description": "Fields",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/components/schemas/GetPaintsFieldsRequest"
                         }
                     }
                 ],
@@ -148,6 +165,14 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],
@@ -202,6 +227,14 @@
                         }
                     },
                     {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
                         "name": "id",
                         "in": "path",
                         "description": "Paint id",
@@ -247,6 +280,14 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -308,6 +349,14 @@
                         "required": true,
                         "schema": {
                             "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     {
@@ -382,19 +431,33 @@
     },
     "components": {
         "schemas": {
-            "GetPaintsRequest": {
-                "title": "Get Paint request",
-                "description": "Get Paint request param data",
+            "GetPaintsFieldsRequest": {
+                "title": "Get Paint Fields request",
+                "description": "Get Paint Fields request param data",
                 "required": [
                     "name"
                 ],
                 "properties": {
-                    "filters": {
+                    "fields": {
                         "type": "array",
                         "items": {
                             "properties": {
-                                "filter_name": {
-                                    "description": "Filter Name",
+                                "1": {
+                                    "description": "Field ID",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "2": {
+                                    "description": "Field Name",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "3": {
+                                    "description": "Field Painter",
                                     "type": "array",
                                     "items": {
                                         "type": "string"
@@ -405,6 +468,39 @@
                         }
                     }
                 },
+                "type": "object"
+            },
+            "GetPaintsFiltersRequest": {
+                "title": "Get Paint Filters request",
+                "description": "Get Paint Filters request param data",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "filters": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "country": {
+                                    "description": "Filter Country",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "GetPaintsRequest": {
+                "title": "Get Paint request",
+                "description": "Get Paint request param data",
+                "required": [
+                    "name"
+                ],
                 "type": "object"
             },
             "StorePaintRequest": {

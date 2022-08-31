@@ -30,7 +30,7 @@ class Paint extends Model
      *
      * @var integer
      */
-    private $id;
+    protected $id;
 
     /**
      * @OA\Property(
@@ -41,7 +41,7 @@ class Paint extends Model
      *
      * @var string
      */
-    public $name;
+    protected $name;
     
     /**
      * @OA\Property(
@@ -53,7 +53,7 @@ class Paint extends Model
      *
      * @var integer
      */
-    public $painter_id;
+    protected $painter_id;
 
 
     /**
@@ -64,7 +64,7 @@ class Paint extends Model
      *
      * @var \App\Virtual\Models\Painter
      */
-    private $painter;
+    protected $painter;
 
     /**
      * @OA\Property(
@@ -76,7 +76,7 @@ class Paint extends Model
      *
      * @var integer
      */
-    public $country_id;
+    protected $country_id;
 
 
     /**
@@ -87,7 +87,7 @@ class Paint extends Model
      *
      * @var \App\Virtual\Models\Country
      */
-    private $country;
+    protected $country;
 
     /**
      * @OA\Property(
@@ -99,7 +99,7 @@ class Paint extends Model
      *
      * @var integer
      */
-    public $user_id;
+    protected $user_id;
 
 
     /**
@@ -110,7 +110,7 @@ class Paint extends Model
      *
      * @var \App\Virtual\Models\User
      */
-    private $user;
+    protected $user;
 
     /**
      * @OA\Property(
@@ -123,7 +123,7 @@ class Paint extends Model
      *
      * @var \DateTime
      */
-    private $created_at;
+    protected $created_at;
 
     /**
      * @OA\Property(
@@ -136,10 +136,10 @@ class Paint extends Model
      *
      * @var \DateTime
      */
-    private $updated_at;
+    protected $updated_at;
 
 
-    protected $fillable = ['name'];
+    protected $fillable = ['id', 'name', 'country_id', 'painter_id'];
     
     public function user()
     {

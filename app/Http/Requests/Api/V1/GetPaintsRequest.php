@@ -3,6 +3,10 @@
 namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Response;
+
 /**
  * @OA\Schema(
  *      title="Get Paint request",
@@ -13,21 +17,42 @@ use Illuminate\Foundation\Http\FormRequest;
  */
 class GetPaintsRequest extends FormRequest
 {
+
     /**
+     * Determine if the user is authorized to make this request.
      *
-     * @OA\Property(
-     *      type="array",
-     *          @OA\Items(
-     *              @OA\Property(
-     *                      property="filter_name",
-     *                      type="array",
-     *                      @OA\Items(type="string"),
-     *                      description="Filter Name"
-     *              )
-     *          ),
-     * )
-     *
-     * @var array
+     * @return bool
      */
-    public $filters;
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            // Fields
+            'fields.*' => [
+                'nullable',
+                Rule::in(['id', 'name', 'country', 'painter'])
+            ],
+            // Filters
+            'filters.id' => 'nullable',
+            'filters.name' => 'nullable',
+            'filters.country' => 'nullable',
+            'filters.painter' => 'nullable',
+        ];
+    }
+
+
+    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
+    {
+        $response = new Response(['error' => $validator->errors()->first()], 422);
+        throw new ValidationException($validator, $response);
+    }
 }
