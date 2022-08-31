@@ -120,9 +120,11 @@ class PaintController extends Controller
      */
     public function store(StorePaintRequest $request)
     {
-        $paint = Paint::create($request->all());
+        $paint = PaintRepository::save($request);
+
         Cache::tags('paints')->flush();
-        return (new PaintResource($paint))
+
+        return $paint
             ->response()
             ->setStatusCode(201);
     }
@@ -180,7 +182,7 @@ class PaintController extends Controller
      */
     public function show(Paint $paint)
     {
-        return new PaintResource($paint->load(['']));
+        return new PaintResource($paint->load(['painter', 'country']));
     }
 
     /**
@@ -244,12 +246,13 @@ class PaintController extends Controller
      */
     public function update(UpdatePaintRequest $request, Paint $paint)
     {
-        $paint->update($request->all());
-        Cache::tags('paints')->flush();
+        $paint = PaintRepository::save($request, $paint->id);
 
-        return (new PaintResource($paint))
+        Cache::tags('paints')->flush();
+        
+        return $paint
             ->response()
-            ->setStatusCode(202);
+            ->setStatusCode(201);
     }
 
     /**

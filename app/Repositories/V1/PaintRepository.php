@@ -7,7 +7,18 @@ use App\Http\Resources\Api\V1\PaintResource;
 use App\Models\Api\V1\Paint;
 class PaintRepository
 {
-    public function save(Request $request) : PaintResource {
+    public static function save(Request $request, ?String $id = null) : PaintResource {
+        // Adding user_id
+        $request->merge(['user_id' => $request->headers->get('X-HTTP-USER-ID')]);
+
+        $paint = Paint::updateOrCreate(
+            [
+                'id' => $id
+            ],
+            $request->all()
+        );
+        return new PaintResource($paint);
+
     }
 
     public static function get($request) : PaintResource {
