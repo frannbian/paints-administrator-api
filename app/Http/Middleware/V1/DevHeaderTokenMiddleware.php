@@ -4,10 +4,8 @@ namespace App\Http\Middleware\V1;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use App\Models\Api\V1\User;
 
-class AuthMiddleware
+class DevHeaderTokenMiddleware
 {
     /**
      * Handle an incoming request.
@@ -18,16 +16,10 @@ class AuthMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $userId = $request->header('X-HTTP-USER-ID');
-        $user = Cache::remember('user-id-' . $userId, 3600, function () use ($userId) {
-            // Connect to the service that host users, in this case (test) we doesn't use this feature
-        });
-
-        if(!$userId) {
-            return response()->json(['message' => 'Unauthenticated.'], 401);
-
+        if (!app()->environment('production') && $request->query('token')) {
+            $token = $request->query('token');
+            $request->headers->set('Authorization', "Bearer {$token}");
         }
-
         return $next($request);
     }
 }

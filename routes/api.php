@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\V1\{PaintController, PainterController, CountryCont
 |
 */
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->middleware(['devHeaderToken', 'client'])->group(function () {
     Route::middleware('auth')->group(function () {
         Route::resource('paints', PaintController::class);
     });
